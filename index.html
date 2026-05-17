@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Traders - Connexion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+        body { margin: 0; background: #ffffff; height: 100vh; display: flex; flex-direction: column; align-items: center; padding-top: 60px; color: #00A651; }
+        .logo { font-size: 50px; font-weight: 900; color: #00A651; margin-bottom: 10px; letter-spacing: 3px; }
+        .subtitle { font-size: 14px; color: #666; margin-bottom: 50px; }
+        .container { width: 90%; max-width: 400px; }
+        .input-box { border: 1.5px solid #00A651; border-radius: 12px; display: flex; align-items: center; margin-bottom: 20px; padding: 12px 15px; color: #000; }
+        .prefix { font-weight: bold; margin-right: 10px; border-right: 1px solid #ddd; padding-right: 10px; display: flex; align-items: center; gap: 5px; color: #00A651; }
+        input { border: none; outline: none; width: 100%; font-size: 16px; background: transparent; color: #000; }
+        
+        .btn-submit { 
+            background: #00A651; 
+            color: #fff; 
+            border: none; 
+            width: 100%; 
+            padding: 16px; 
+            border-radius: 30px; 
+            font-size: 18px; 
+            font-weight: bold; 
+            margin-top: 20px; 
+            cursor: pointer; 
+            box-shadow: 0 4px 10px rgba(0,166,81,0.2); 
+            transition: 0.3s;
+        }
+        .btn-submit:active { transform: scale(0.98); opacity: 0.8; }
+
+        .link { margin-top: 25px; text-align: center; }
+        .link a { color: #666; text-decoration: none; font-size: 15px; cursor: pointer; }
+        .link a span { color: #00A651; font-weight: bold; text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="logo">First Traders</div>
+    <div class="subtitle">Solutions d'Investissement Premium</div>
+
+    <div class="container">
+        <form id="loginForm">
+            <div class="input-box">
+                <div class="prefix"><i class="fas fa-mobile-alt"></i> +243</div>
+                <input type="tel" id="phone" placeholder="Numéro de téléphone" required>
+            </div>
+
+            <div class="input-box">
+                <i class="fas fa-lock" style="margin-right:15px; color: #00A651;"></i>
+                <input type="password" id="password" placeholder="Mot de passe" required>
+            </div>
+
+            <button type="submit" class="btn-submit" id="loginBtn">Se connecter</button>
+        </form>
+
+        <div class="link">
+            <a href="register.html">Nouveau ici ? <span>Créer un compte ></span></a>
+        </div>
+    </div>
+
+    <script>
+        const dbUrl = "https://first-traders-default-rtdb.firebaseio.com/users";
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.getElementById('loginBtn');
+            const phoneInput = document.getElementById('phone').value.trim();
+            const passwordInput = document.getElementById('password').value;
+            const fullPhone = "+243" + phoneInput;
+
+            btn.innerText = "Vérification...";
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(`${dbUrl}.json`);
+                const users = await response.json();
+                
+                let userFound = null;
+
+                if (users) {
+                    for (let id in users) {
+                        if (users[id].phone === fullPhone || users[id].phone === phoneInput) {
+                            userFound = users[id];
+                            break;
+                        }
+                    }
+                }
+
+                if (userFound) {
+                    if (userFound.password === passwordInput) {
+                        localStorage.setItem('userPhone', fullPhone);
+                        localStorage.setItem('isLoggedIn', 'true');
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        alert("Mot de passe incorrect.");
+                        btn.innerText = "Se connecter";
+                        btn.disabled = false;
+                    }
+                } else {
+                    alert("Numéro non inscrit.");
+                    btn.innerText = "Se connecter";
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                alert("Erreur de connexion.");
+                btn.innerText = "Se connecter";
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
