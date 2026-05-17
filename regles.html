@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Traders - Règlement & Conditions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; font-family: 'Helvetica Neue', Arial, sans-serif; }
+        body { margin: 0; background-color: #f8f8f8; color: #000; padding-bottom: 40px; }
+
+        .header { background: #00A651; /* Noir changé en Vert */ color: #fff; padding: 20px; display: flex; align-items: center; gap: 15px; }
+        .header a { color: #fff; text-decoration: none; }
+        
+        .container { padding: 20px; }
+
+        /* Style des sections de règles */
+        .rules-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+        .rules-card h3 { 
+            margin-top: 0; 
+            font-size: 16px; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            color: #00A651; /* Noir changé en Vert */
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+        .rules-card h3 i { font-size: 18px; width: 20px; text-align: center; }
+        
+        .rules-list {
+            padding: 0;
+            margin: 15px 0 0;
+            list-style: none;
+        }
+        .rules-list li {
+            font-size: 13px;
+            color: #444;
+            margin-bottom: 12px;
+            line-height: 1.5;
+            display: flex;
+            gap: 10px;
+        }
+        .rules-list li::before {
+            content: "•";
+            color: #00A651; /* Puce changée en Vert */
+            font-weight: bold;
+        }
+
+        .important-note {
+            background: #00A651; /* Fond noir changé en Vert */
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="profil.html"><i class="fas fa-arrow-left"></i></a>
+        <h1>Règlement Intérieur</h1>
+    </div>
+
+    <div class="container">
+        
+        <div class="rules-card">
+            <h3><i class="fas fa-chart-pie"></i> Investissements</h3>
+            <ul class="rules-list">
+                <li>Chaque utilisateur peut posséder plusieurs produits VIP simultanément.</li>
+                <li>Les revenus sont générés toutes les 24 heures après l'activation.</li>
+                <li>Le capital investi n'est pas remboursable avant la fin du cycle.</li>
+            </ul>
+        </div>
+
+        <div class="rules-card">
+            <h3><i class="fas fa-money-check-alt"></i> Retraits & Frais</h3>
+            <ul class="rules-list">
+                <li>Le montant minimum de retrait est fixé à 2,500 FC pour tous les niveaux.</li>
+                <li><b>Frais de retrait :</b> Une commission de 20% est prélevée pour la maintenance de la plateforme.</li>
+                <li><b>Sécurité :</b> Seuls les utilisateurs détenant un investissement actif ont droit au retrait.</li>
+                <li><b>Limite :</b> Un seul retrait autorisé par jour (toutes les 24h).</li>
+                <li>Les retraits sont traités via Airtel Money, Orange Money ou M-Pesa.</li>
+            </ul>
+        </div>
+
+        <div class="rules-card">
+            <h3><i class="fas fa-user-shield"></i> Sécurité du compte</h3>
+            <ul class="rules-list">
+                <li>Un seul compte est autorisé par utilisateur et par adresse IP.</li>
+                <li>Toute tentative de fraude ou de création de comptes multiples entraînera un bannissement définitif.</li>
+                <li>Ne partagez jamais votre mot de passe avec un tiers, même le service client.</li>
+            </ul>
+        </div>
+
+        <div class="rules-card">
+            <h3><i class="fas fa-gift"></i> Bonus & Équipe</h3>
+            <ul class="rules-list">
+                <li>Les bonus de parrainage sont crédités instantanément après l'investissement du filleul.</li>
+                <li>Le bonus de connexion quotidienne doit être réclamé manuellement sur votre interface.</li>
+            </ul>
+        </div>
+
+        <div class="important-note">
+            <i class="fas fa-exclamation-triangle"></i> En utilisant First Traders, vous acceptez l'intégralité de ces règles.
+        </div>
+
+    </div>
+
+</body>
+</html>
