@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Traders - Mon Équipe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; font-family: 'Helvetica Neue', Arial, sans-serif; }
+        body { margin: 0; background-color: #f8f8f8; color: #000; padding-bottom: 80px; }
+
+        .team-header {
+            background-color: #00A651; /* Noir changé en Vert */
+            color: #fff;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .team-header h1 { margin: 0; font-size: 24px; text-transform: uppercase; }
+        .team-header p { font-size: 13px; opacity: 0.8; margin-top: 10px; }
+
+        .commission-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 20px;
+            margin-top: -30px;
+        }
+        .comm-card {
+            background: #fff;
+            padding: 15px 5px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+        .lv-badge {
+            display: inline-block;
+            border: 1px solid #00A651; /* Noir changé en Vert */
+            color: #00A651;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        .comm-rate { font-size: 11px; font-weight: bold; margin-bottom: 5px; color: #00A651; }
+        .comm-stats { font-size: 10px; color: #666; line-height: 1.4; }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 0 20px 20px;
+        }
+        .btn-outline {
+            border: 1px solid #00A651; /* Noir changé en Vert */
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            text-decoration: none;
+            color: #00A651; /* Noir changé en Vert */
+            font-weight: 500;
+        }
+
+        .invite-section {
+            background: #fff;
+            margin: 0 20px;
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #eee;
+        }
+        .invite-title { font-size: 16px; font-weight: bold; margin-bottom: 15px; color: #000; }
+        
+        .copy-box {
+            display: flex;
+            align-items: center;
+            background: #f4f4f4;
+            padding: 10px 15px;
+            border-radius: 25px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+        }
+        .copy-text { flex: 1; font-size: 13px; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .btn-copy {
+            background: #00A651; /* Noir changé en Vert */
+            color: #fff;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 15px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .progression-banner {
+            background: #00A651; /* Noir changé en Vert */
+            color: #fff;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .progression-banner h2 { margin: 0; font-size: 16px; }
+        .progression-val { font-size: 20px; font-weight: bold; }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #fff;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            border-top: 1px solid #ddd;
+        }
+        .nav-item { text-decoration: none; color: #888; text-align: center; font-size: 11px; }
+        .nav-item.active { color: #00A651; font-weight: bold; } /* Actif en Vert */
+        .nav-icon { font-size: 22px; display: block; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+    <div class="team-header">
+        <h1>ÉQUIPE</h1>
+        <p>Invitez vos amis à rejoindre l'aventure First Traders</p>
+    </div>
+
+    <div class="commission-grid">
+        <div class="comm-card">
+            <div class="lv-badge">Lv1</div>
+            <div class="comm-rate">Commission : 35%</div>
+            <div class="comm-stats">Utilisateurs : <span id="countLv1">0</span><br>Récompenses : <span id="rewardLv1">0</span></div>
+        </div>
+        <div class="comm-card">
+            <div class="lv-badge">Lv2</div>
+            <div class="comm-rate">Commission : 2%</div>
+            <div class="comm-stats">Utilisateurs : <span id="countLv2">0</span><br>Récompenses : <span id="rewardLv2">0</span></div>
+        </div>
+        <div class="comm-card">
+            <div class="lv-badge">Lv3</div>
+            <div class="comm-rate">Commission : 1%</div>
+            <div class="comm-stats">Utilisateurs : <span id="countLv3">0</span><br>Récompenses : <span id="rewardLv3">0</span></div>
+        </div>
+    </div>
+
+    <div class="nav-buttons">
+        <a href="taches.html" class="btn-outline">Centre de missions ></a>
+        <a href="historique_equipe.html" class="btn-outline">Historique d'équipe ></a>
+    </div>
+
+    <div class="invite-section">
+        <div class="invite-title">Commencez à inviter</div>
+        <div class="copy-box">
+            <div class="copy-text" id="inviteCode">Chargement...</div>
+            <button class="btn-copy" onclick="copyText('inviteCode')">Copier</button>
+        </div>
+        <div class="copy-box">
+            <div class="copy-text" id="inviteLink">Chargement...</div>
+            <button class="btn-copy" onclick="copyText('inviteLink')">Copier</button>
+        </div>
+    </div>
+
+    <div class="progression-banner">
+        <h2>Ma progression</h2>
+        <div class="progression-val" id="totalTeam">0</div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item"><i class="fas fa-home nav-icon"></i>Accueil</a>
+        <a href="produit.html" class="nav-item"><i class="fas fa-box nav-icon"></i>Produit</a>
+        <a href="equipe.html" class="nav-item active"><i class="fas fa-users nav-icon"></i>Équipe</a>
+        <a href="profil.html" class="nav-item"><i class="fas fa-user nav-icon"></i>Moi</a>
+    </nav>
+
+    <script>
+        // URL DB mise à jour pour First Traders
+        const dbUrl = "https://first-traders-default-rtdb.firebaseio.com/users";
+        const userPhone = localStorage.getItem('userPhone');
+        // Base URL mise à jour pour First Traders
+        const baseUrl = "https://first-traders.github.io/First/";
+
+        if (!userPhone) { window.location.href = 'index.html'; }
+
+        // Génération du code d'invitation (6 derniers chiffres du tel)
+        const myInviteCode = userPhone.slice(-6);
+        document.getElementById('inviteCode').innerText = myInviteCode;
+        document.getElementById('inviteLink').innerText = `${baseUrl}register.html?ref=${myInviteCode}`;
+
+        function copyText(id) {
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text);
+            alert("Copié avec succès !");
+        }
+
+        async function loadTeamData() {
+            try {
+                const response = await fetch(`${dbUrl}.json`);
+                const users = await response.json();
+                
+                let lv1 = 0, lv2 = 0, lv3 = 0;
+
+                // 1. Compter Niveau 1 (Directs)
+                const directs = [];
+                for (let id in users) {
+                    if (users[id].referredBy === myInviteCode) {
+                        lv1++;
+                        directs.push(users[id].phone.slice(-6));
+                    }
+                }
+
+                // 2. Compter Niveau 2
+                const level2Users = [];
+                for (let id in users) {
+                    if (directs.includes(users[id].referredBy)) {
+                        lv2++;
+                        level2Users.push(users[id].phone.slice(-6));
+                    }
+                }
+
+                // 3. Compter Niveau 3
+                for (let id in users) {
+                    if (level2Users.includes(users[id].referredBy)) {
+                        lv3++;
+                    }
+                }
+
+                document.getElementById('countLv1').innerText = lv1;
+                document.getElementById('countLv2').innerText = lv2;
+                document.getElementById('countLv3').innerText = lv3;
+                document.getElementById('totalTeam').innerText = lv1 + lv2 + lv3;
+
+            } catch (error) {
+                console.error("Erreur équipe:", error);
+            }
+        }
+
+        loadTeamData();
+    </script>
+</body>
+</html>
