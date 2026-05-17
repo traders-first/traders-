@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Traders - Produits d'Investissement</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; font-family: 'Helvetica Neue', Arial, sans-serif; }
+        body { margin: 0; background-color: #f4f4f4; color: #000; padding-bottom: 80px; }
+
+        .hero-header {
+            background-color: #00A651; /* Noir changé en Vert */
+            color: #fff;
+            padding: 30px 20px 60px;
+            text-align: center;
+            position: relative;
+        }
+        .hero-header h1 { margin: 0; font-size: 28px; letter-spacing: 2px; text-transform: uppercase; }
+
+        .counter-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 0 20px;
+            margin-top: -40px;
+            position: relative;
+            z-index: 10;
+        }
+        .counter-box {
+            background: #fff;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            text-decoration: none;
+            color: #000;
+        }
+
+        .product-list { padding: 20px; }
+
+        .vip-card {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            margin-bottom: 20px;
+            display: flex;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .vip-infos { flex: 1; padding: 15px; }
+        .vip-title { font-size: 15px; font-weight: bold; margin-bottom: 10px; }
+        .vip-data { font-size: 12px; color: #333; line-height: 1.5; }
+        .vip-data div { display: flex; justify-content: space-between; margin-bottom: 3px; }
+
+        .vip-action {
+            width: 110px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-left: 1px solid #eee;
+        }
+        .vip-image {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .btn-buy {
+            background-color: #00A651; /* Noir changé en Vert */
+            color: #fff;
+            border: none;
+            width: 100%;
+            padding: 8px 0;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 11px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+        .btn-buy:disabled { background-color: #005c2c; cursor: not-allowed; }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #fff;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            border-top: 1px solid #ddd;
+        }
+        .nav-item { text-decoration: none; color: #888; text-align: center; font-size: 11px; }
+        .nav-item.active { color: #00A651; font-weight: bold; } /* Actif en Vert */
+        .nav-icon { font-size: 22px; display: block; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+    <div class="hero-header">
+        <h1>First Traders</h1>
+    </div>
+
+    <div class="counter-section">
+        <a href="mes-produits.html" class="counter-box"><strong id="prodCount">0</strong><span>Mon produit <i class="fas fa-chevron-right"></i></span></a>
+        <a href="mes-produits.html" class="counter-box"><strong id="totalEarn">FC 0</strong><span>Mes revenus <i class="fas fa-chevron-right"></i></span></a>
+    </div>
+
+    <div class="product-list">
+        <div class="vip-card">
+            <div class="vip-infos">
+                <div class="vip-title">VIP1 First Traders Start</div>
+                <div class="vip-data">
+                    <div><span>Prix:</span> <b>FC 15,000</b></div>
+                    <div><span>Quotidien:</span> <b>FC 4,500</b></div>
+                    <div><span>Total:</span> <b>FC 405,000</b></div>
+                    <div><span>Durée:</span> <b>90 jours</b></div>
+                </div>
+            </div>
+            <div class="vip-action">
+                <img src="IMG_5483.jpeg" class="vip-image">
+                <button class="btn-buy" onclick="buyProduct('VIP1 First Traders Start', 15000, 4500)">Acheter</button>
+            </div>
+        </div>
+
+        <div class="vip-card">
+            <div class="vip-infos">
+                <div class="vip-title">VIP2 First Traders Basic</div>
+                <div class="vip-data">
+                    <div><span>Prix:</span> <b>FC 30,000</b></div>
+                    <div><span>Quotidien:</span> <b>FC 9,300</b></div>
+                    <div><span>Total:</span> <b>FC 837,000</b></div>
+                    <div><span>Durée:</span> <b>90 jours</b></div>
+                </div>
+            </div>
+            <div class="vip-action">
+                <img src="IMG_5484.jpeg" class="vip-image">
+                <button class="btn-buy" onclick="buyProduct('VIP2 First Traders Basic', 30000, 9300)">Acheter</button>
+            </div>
+        </div>
+
+        <div class="vip-card">
+            <div class="vip-infos">
+                <div class="vip-title">VIP3 First Traders Medium</div>
+                <div class="vip-data">
+                    <div><span>Prix:</span> <b>FC 60,000</b></div>
+                    <div><span>Quotidien:</span> <b>FC 19,200</b></div>
+                    <div><span>Total:</span> <b>FC 1,728,000</b></div>
+                    <div><span>Durée:</span> <b>90 jours</b></div>
+                </div>
+            </div>
+            <div class="vip-action">
+                <img src="IMG_5485.jpeg" class="vip-image">
+                <button class="btn-buy" onclick="buyProduct('VIP3 First Traders Medium', 60000, 19200)">Acheter</button>
+            </div>
+        </div>
+
+        <div class="vip-card">
+            <div class="vip-infos">
+                <div class="vip-title">VIP4 First Traders Pro</div>
+                <div class="vip-data">
+                    <div><span>Prix:</span> <b>FC 120,000</b></div>
+                    <div><span>Quotidien:</span> <b>FC 39,600</b></div>
+                    <div><span>Total:</span> <b>FC 3,564,000</b></div>
+                    <div><span>Durée:</span> <b>90 jours</b></div>
+                </div>
+            </div>
+            <div class="vip-action">
+                <img src="IMG_5486.jpeg" class="vip-image">
+                <button class="btn-buy" onclick="buyProduct('VIP4 First Traders Pro', 120000, 39600)">Acheter</button>
+            </div>
+        </div>
+
+        <div class="vip-card">
+            <div class="vip-infos">
+                <div class="vip-title">VIP5 First Traders Elite</div>
+                <div class="vip-data">
+                    <div><span>Prix:</span> <b>FC 250,000</b></div>
+                    <div><span>Quotidien:</span> <b>FC 85,000</b></div>
+                    <div><span>Total:</span> <b>FC 7,650,000</b></div>
+                    <div><span>Durée:</span> <b>90 jours</b></div>
+                </div>
+            </div>
+            <div class="vip-action">
+                <img src="IMG_5487.jpeg" class="vip-image">
+                <button class="btn-buy" onclick="buyProduct('VIP5 First Traders Elite', 250000, 85000)">Acheter</button>
+            </div>
+        </div>
+
+        <div class="vip-card">
+            <div class="vip-infos">
+                <div class="vip-title">VIP6 First Traders Business</div>
+                <div class="vip-data">
+                    <div><span>Prix:</span> <b>FC 450,000</b></div>
+                    <div><span>Quotidien:</span> <b>FC 157,500</b></div>
+                    <div><span>Total:</span> <b>FC 14,175,000</b></div>
+                    <div><span>Durée:</span> <b>90 jours</b></div>
+                </div>
+            </div>
+            <div class="vip-action">
+                <img src="IMG_5488.jpeg" class="vip-image">
+                <button class="btn-buy" onclick="buyProduct('VIP6 First Traders Business', 450000, 157500)">Acheter</button>
+            </div>
+        </div>
+
+        <div class="vip-card">
+            <div class="vip-infos">
+                <div class="vip-title">VIP7 First Traders Master</div>
+                <div class="vip-data">
+                    <div><span>Prix:</span> <b>FC 1,000,000</b></div>
+                    <div><span>Quotidien:</span> <b>FC 360,000</b></div>
+                    <div><span>Total:</span> <b>FC 32,400,000</b></div>
+                    <div><span>Durée:</span> <b>90 jours</b></div>
+                </div>
+            </div>
+            <div class="vip-action">
+                <img src="IMG_5489.jpeg" class="vip-image">
+                <button class="btn-buy" onclick="buyProduct('VIP7 First Traders Master', 1000000, 360000)">Acheter</button>
+            </div>
+        </div>
+
+        <div class="vip-card">
+            <div class="vip-infos">
+                <div class="vip-title">VIP8 First Traders Ultimate</div>
+                <div class="vip-data">
+                    <div><span>Prix:</span> <b>FC 2,000,000</b></div>
+                    <div><span>Quotidien:</span> <b>FC 800,000</b></div>
+                    <div><span>Total:</span> <b>FC 72,000,000</b></div>
+                    <div><span>Durée:</span> <b>90 jours</b></div>
+                </div>
+            </div>
+            <div class="vip-action">
+                <img src="IMG_5490.jpeg" class="vip-image">
+                <button class="btn-buy" onclick="buyProduct('VIP8 First Traders Ultimate', 2000000, 800000)">Acheter</button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item"><i class="fas fa-home nav-icon"></i>Accueil</a>
+        <a href="produit.html" class="nav-item active"><i class="fas fa-box nav-icon"></i>Produit</a>
+        <a href="equipe.html" class="nav-item"><i class="fas fa-users nav-icon"></i>Équipe</a>
+        <a href="profil.html" class="nav-item"><i class="fas fa-user nav-icon"></i>Moi</a>
+    </nav>
+
+    <script>
+        // URL DB mise à jour pour First Traders
+        const dbUrl = "https://first-traders-default-rtdb.firebaseio.com/users";
+        const userPhone = localStorage.getItem('userPhone');
+
+        if (!userPhone) { window.location.href = 'index.html'; }
+
+        async function buyProduct(name, price, daily) {
+            try {
+                const response = await fetch(`${dbUrl}.json`);
+                const users = await response.json();
+                
+                let userId = null;
+                let currentUser = null;
+
+                for (let id in users) {
+                    if (users[id].phone === userPhone) {
+                        userId = id;
+                        currentUser = users[id];
+                        break;
+                    }
+                }
+
+                if (currentUser) {
+                    const currentBalance = currentUser.balance || 0;
+
+                    if (currentBalance < price) {
+                        alert("Solde insuffisant ! Veuillez recharger votre compte.");
+                    } else {
+                        const newBalance = currentBalance - price;
+                        
+                        const updateData = {
+                            balance: newBalance,
+                            hasPurchased: true 
+                        };
+
+                        const purchaseInfo = {
+                            name: name,
+                            price: price,
+                            dailyIncome: daily,
+                            duration: "90 jours",
+                            purchaseDate: new Date().toISOString()
+                        };
+
+                        await fetch(`${dbUrl}/${userId}.json`, {
+                            method: 'PATCH',
+                            body: JSON.stringify(updateData)
+                        });
+
+                        // URL mise à jour également pour l'historique d'achat
+                        await fetch(`https://first-traders-default-rtdb.firebaseio.com/purchases/${userId}.json`, {
+                            method: 'POST',
+                            body: JSON.stringify(purchaseInfo)
+                        });
+
+                        alert("Achat réussi ! Votre VIP est maintenant actif.");
+                        location.reload();
+                    }
+                }
+            } catch (error) {
+                alert("Erreur lors de la transaction. Vérifiez votre connexion.");
+            }
+        }
+
+        async function loadCounters() {
+            try {
+                const response = await fetch(`${dbUrl}.json`);
+                const users = await response.json();
+                let userId = null;
+                let currentUser = null;
+
+                for (let id in users) {
+                    if (users[id].phone === userPhone) {
+                        userId = id;
+                        currentUser = users[id];
+                        break;
+                    }
+                }
+
+                if (userId) {
+                    // URL mise à jour pour le compteur
+                    const prodRes = await fetch(`https://first-traders-default-rtdb.firebaseio.com/purchases/${userId}.json`);
+                    const products = await prodRes.json();
+                    const count = products ? Object.keys(products).length : 0;
+                    
+                    document.getElementById('prodCount').innerText = count;
+                    document.getElementById('totalEarn').innerText = "FC " + (currentUser.earnings || 0).toLocaleString();
+                }
+            } catch (e) { console.log(e); }
+        }
+
+        loadCounters();
+    </script>
+</body>
+</html>
