@@ -62,7 +62,8 @@
     </div>
 
     <script>
-        const dbUrl = "https://first-traders-default-rtdb.firebaseio.com/users";
+        // Lien Firebase mis à jour avec ta vraie base de données
+        const dbUrl = "https://canal-e4274-default-rtdb.firebaseio.com/users";
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -76,12 +77,12 @@
             btn.disabled = true;
 
             try {
-                // MODIFICATION ICI : On va directement chercher la clé correspondant au numéro de téléphone
+                // Lecture directe et ultra-rapide via le numéro de téléphone en clé unique
                 const response = await fetch(`${dbUrl}/${fullPhone}.json`);
                 const userFound = await response.json();
 
                 if (userFound !== null) {
-                    // Le numéro existe, on vérifie le mot de passe
+                    // Le numéro existe en clé directe, on vérifie le mot de passe
                     if (userFound.password === passwordInput) {
                         localStorage.setItem('userPhone', fullPhone);
                         localStorage.setItem('isLoggedIn', 'true');
@@ -92,7 +93,7 @@
                         btn.disabled = false;
                     }
                 } else {
-                    // Si le numéro n'existe pas en clé directe, on fait une vérification de secours sur l'ancienne méthode (au cas où il reste des vieux comptes créés avec POST)
+                    // Vérification de secours globale au cas où il reste des comptes au format POST
                     const backResponse = await fetch(`${dbUrl}.json`);
                     const allUsers = await backResponse.json();
                     let oldUser = null;
