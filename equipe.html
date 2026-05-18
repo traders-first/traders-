@@ -174,16 +174,16 @@
     </nav>
 
     <script>
-        // URL DB pour First Traders
-        const dbUrl = "https://first-traders-default-rtdb.firebaseio.com/users";
+        // Ta vraie URL Firebase Realtime Database
+        const dbUrl = "https://canal-e4274-default-rtdb.firebaseio.com/users";
         const userPhone = localStorage.getItem('userPhone');
         
-        // Base URL configurée exactement avec ton lien de plate-forme fourni
+        // Base URL de déploiement GitHub Pages
         const baseUrl = "https://traders-first.github.io/traders-/";
 
         if (!userPhone) { window.location.href = 'index.html'; }
 
-        // Génération du code d'invitation (6 derniers chiffres du tel)
+        // Génération du code d'invitation (les 6 derniers chiffres du numéro de téléphone)
         const myInviteCode = userPhone.slice(-6);
         document.getElementById('inviteCode').innerText = myInviteCode;
         document.getElementById('inviteLink').innerText = `${baseUrl}register.html?ref=${myInviteCode}`;
@@ -201,28 +201,35 @@
                 
                 let lv1 = 0, lv2 = 0, lv3 = 0;
 
-                // 1. Compter Niveau 1 (Directs)
-                const directs = [];
-                for (let id in users) {
-                    if (users[id].referredBy === myInviteCode) {
-                        lv1++;
-                        directs.push(users[id].phone.slice(-6));
+                if (users) {
+                    // 1. Compter Niveau 1 (Directs)
+                    const directs = [];
+                    for (let id in users) {
+                        if (users[id].referredBy === myInviteCode) {
+                            lv1++;
+                            // Extraction des 6 derniers chiffres du numéro comme identifiant d'invitation
+                            if (users[id].phone) {
+                                directs.push(users[id].phone.slice(-6));
+                            }
+                        }
                     }
-                }
 
-                // 2. Compter Niveau 2
-                const level2Users = [];
-                for (let id in users) {
-                    if (directs.includes(users[id].referredBy)) {
-                        lv2++;
-                        level2Users.push(users[id].phone.slice(-6));
+                    // 2. Compter Niveau 2
+                    const level2Users = [];
+                    for (let id in users) {
+                        if (directs.includes(users[id].referredBy)) {
+                            lv2++;
+                            if (users[id].phone) {
+                                level2Users.push(users[id].phone.slice(-6));
+                            }
+                        }
                     }
-                }
 
-                // 3. Compter Niveau 3
-                for (let id in users) {
-                    if (level2Users.includes(users[id].referredBy)) {
-                        lv3++;
+                    // 3. Compter Niveau 3
+                    for (let id in users) {
+                        if (level2Users.includes(users[id].referredBy)) {
+                            lv3++;
+                        }
                     }
                 }
 
