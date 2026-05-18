@@ -89,13 +89,13 @@
 
             const myInviteCode = Math.random().toString(36).substring(2, 8);
 
-            // --- BONUS RESTÉ À 2500 FC ---
+            // --- BONUS MODIFIÉ À 500 FC ---
             const userData = {
                 phone: fullPhone,
                 password: password,
                 inviteCode: myInviteCode,
                 referredBy: invite,
-                balance: 2500, 
+                balance: 500, 
                 date: new Date().toISOString()
             };
 
@@ -117,7 +117,7 @@
                 });
 
                 localStorage.setItem('userPhone', fullPhone);
-                alert("Compte créé avec succès ! Bonus de 2500 FC offert.");
+                alert("Compte créé avec succès ! Bonus de 500 FC offert.");
                 window.location.href = 'dashboard.html';
             } catch (error) {
                 alert("Erreur lors de l'inscription.");
