@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Traders - Historique</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; font-family: 'Helvetica Neue', Arial, sans-serif; }
+        body { margin: 0; background-color: #f8f8f8; color: #000; }
+
+        .header { background: #00A651; /* Noir changé en Vert */ color: #fff; padding: 20px; display: flex; align-items: center; gap: 15px; }
+        .header a { color: #fff; text-decoration: none; font-size: 20px; }
+        .header h1 { margin: 0; font-size: 18px; }
+
+        /* Système d'onglets */
+        .tabs {
+            display: flex;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .tab-item {
+            flex: 1;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+            font-weight: bold;
+            color: #888;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        .tab-item.active {
+            color: #00A651; /* Noir changé en Vert */
+            border-bottom-color: #00A651; /* Bordure d'activation changée en Vert */
+        }
+
+        .content-section { padding: 15px; display: none; min-height: 300px; }
+        .content-section.active { display: block; }
+
+        /* État vide - Design épuré */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #bbb;
+        }
+        .empty-state i { 
+            font-size: 60px; 
+            margin-bottom: 20px; 
+            display: block; 
+            color: #ddd;
+        }
+        .empty-state p { 
+            font-size: 14px; 
+            margin: 0;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="profil.html"><i class="fas fa-arrow-left"></i></a>
+        <h1>Mes Historiques</h1>
+    </div>
+
+    <div class="tabs">
+        <div class="tab-item active" onclick="openTab(event, 'recharges')">Recharges</div>
+        <div class="tab-item" onclick="openTab(event, 'retraits')">Retraits</div>
+    </div>
+
+    <div id="recharges" class="content-section active">
+        <div class="empty-state">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <p>Aucune recharge effectuée pour le moment.</p>
+        </div>
+    </div>
+
+    <div id="retraits" class="content-section">
+        <div class="empty-state">
+            <i class="fas fa-hand-holding-usd"></i>
+            <p>Votre historique de retrait est vide.</p>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, content, tabs;
+            content = document.getElementsByClassName("content-section");
+            for (i = 0; i < content.length; i++) {
+                content[i].classList.remove("active");
+            }
+            tabs = document.getElementsByClassName("tab-item");
+            for (i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+
+</body>
+</html>
