@@ -145,24 +145,20 @@
         <div class="modal-content">
             <div class="modal-header"><i class="fas fa-bell"></i></div>
             <div class="modal-body">
-                <!-- Nom changé ici -->
                 <p style="font-weight: bold; text-align: center;">Bienvenue sur First Traders RDC</p>
-                <!-- Nom et détails changés ici -->
-                <p style="font-size: 12px; text-align: justify;">La plateforme First Traders a été lancée en République démocratique du Congo le 30 mars 2026. Rechargez votre compte et recevez immédiatement 2 500 francs pour couvrir les frais de traitement du retrait. Les retraits s’effectuent en moins de 2 minutes.</p>
+                <p style="font-size: 12px; text-align: justify;">La plateforme First Traders a été lancée en République démocratique du Congo en 2026. Rechargez votre compte et recevez immédiatement 2 500 francs pour couvrir les frais de traitement du retrait. Les retraits s’effectuent en moins de 2 minutes.</p>
                 <ol>
-                    <li>Bonus d'inscription : 2 500 FC.</li>
+                    <li>Bonus d'inscription : 500 FC.</li>
                     <li>Revenus générés versés 24h/24.</li>
                     <li>Rejoignez notre communauté officielle.</li>
                 </ol>
-                <!-- Bouton WhatsApp mis à jour -->
-                <a href="https://chat.whatsapp.com/BBYcpYzuR2yBpIX1lpinSH?mode=gi_t" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> Rejoindre le Groupe WhatsApp</a>
+                <a href="https://chat.whatsapp.com/C8Fju1x5abTIuTLpm4VCS1?mode=gi_t" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> Rejoindre le Groupe WhatsApp</a>
                 <button class="btn-ok" onclick="document.getElementById('announcement').style.display='none'">Fermer</button>
             </div>
         </div>
     </div>
 
     <div class="hero-banner">
-        <!-- Nom changé ici -->
         <h1>First Traders</h1>
         <p>Solutions d'Investissement Premium</p>
     </div>
@@ -172,10 +168,9 @@
         <a href="retrait.html" class="icon-item"><div class="icon-placeholder"><i class="fas fa-hand-holding-usd"></i></div><span>Retrait</span></a>
         <a href="historique.html" class="icon-item"><div class="icon-placeholder"><i class="fas fa-history"></i></div><span>Historique</span></a>
         <a href="taches.html" class="icon-item"><div class="icon-placeholder"><i class="fas fa-calendar-alt"></i></div><span>Quotidien</span></a>
-        <a href="a-propos.html" class="icon-item"><div class="icon-placeholder"><i class="fas fa-info-circle"></i></div><span>À propos</span></a>
+        <a href="apropos.html" class="icon-item"><div class="icon-placeholder"><i class="fas fa-info-circle"></i></div><span>À propos</span></a>
         <a href="regles.html" class="icon-item"><div class="icon-placeholder"><i class="fas fa-gavel"></i></div><span>Règles</span></a>
-        <!-- Support Telegram conservé mais icône en vert via CSS -->
-        <a href="https://t.me/serv0754" class="icon-item"><div class="icon-placeholder"><i class="fas fa-headset"></i></div><span>Aide</span></a>
+        <a href="https://t.me/svice_first1" class="icon-item"><div class="icon-placeholder"><i class="fas fa-headset"></i></div><span>Aide</span></a>
         <a href="taches.html" class="icon-item"><div class="icon-placeholder"><i class="fas fa-tasks"></i></div><span>Tâches</span></a>
     </div>
 
@@ -210,11 +205,9 @@
     </nav>
 
     <script>
-        // URL DB mise à jour pour First Traders
         const dbUrl = "https://first-traders-default-rtdb.firebaseio.com/users";
         const userPhone = localStorage.getItem('userPhone');
 
-        // Redirection si non connecté
         if (!userPhone) { window.location.href = 'index.html'; }
 
         async function fetchUserData() {
@@ -247,10 +240,9 @@
             document.getElementById('tickerText').innerText = `L'utilisateur +243${randNum}***${randSuffix} vient de retirer ${randAmt} FC ... Un nouveau VIP a été activé (+243***${randSuffix})`;
         }
 
-        // Initialisation
         fetchUserData();
         updateTicker();
-        setInterval(updateTicker, 10000); // Mise à jour du ticker toutes les 10s
+        setInterval(updateTicker, 10000);
     </script>
 
 </body>
