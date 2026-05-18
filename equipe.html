@@ -10,7 +10,7 @@
         body { margin: 0; background-color: #f8f8f8; color: #000; padding-bottom: 80px; }
 
         .team-header {
-            background-color: #00A651; /* Noir changé en Vert */
+            background-color: #00A651; /* Vert First Traders */
             color: #fff;
             padding: 40px 20px;
             text-align: center;
@@ -35,7 +35,7 @@
         }
         .lv-badge {
             display: inline-block;
-            border: 1px solid #00A651; /* Noir changé en Vert */
+            border: 1px solid #00A651;
             color: #00A651;
             padding: 2px 8px;
             border-radius: 5px;
@@ -53,12 +53,12 @@
             padding: 0 20px 20px;
         }
         .btn-outline {
-            border: 1px solid #00A651; /* Noir changé en Vert */
+            border: 1px solid #00A651;
             padding: 8px 15px;
             border-radius: 20px;
             font-size: 12px;
             text-decoration: none;
-            color: #00A651; /* Noir changé en Vert */
+            color: #00A651;
             font-weight: 500;
         }
 
@@ -82,7 +82,7 @@
         }
         .copy-text { flex: 1; font-size: 13px; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .btn-copy {
-            background: #00A651; /* Noir changé en Vert */
+            background: #00A651;
             color: #fff;
             border: none;
             padding: 6px 15px;
@@ -92,7 +92,7 @@
         }
 
         .progression-banner {
-            background: #00A651; /* Noir changé en Vert */
+            background: #00A651;
             color: #fff;
             margin: 20px;
             padding: 20px;
@@ -115,7 +115,7 @@
             border-top: 1px solid #ddd;
         }
         .nav-item { text-decoration: none; color: #888; text-align: center; font-size: 11px; }
-        .nav-item.active { color: #00A651; font-weight: bold; } /* Actif en Vert */
+        .nav-item.active { color: #00A651; font-weight: bold; }
         .nav-icon { font-size: 22px; display: block; margin-bottom: 4px; }
     </style>
 </head>
@@ -130,17 +130,17 @@
         <div class="comm-card">
             <div class="lv-badge">Lv1</div>
             <div class="comm-rate">Commission : 35%</div>
-            <div class="comm-stats">Utilisateurs : <span id="countLv1">0</span><br>Récompenses : <span id="rewardLv1">0</span></div>
+            <div class="comm-stats">Membres : <span id="countLv1">0</span><br>Gains : <span id="rewardLv1">0 FC</span></div>
         </div>
         <div class="comm-card">
             <div class="lv-badge">Lv2</div>
             <div class="comm-rate">Commission : 2%</div>
-            <div class="comm-stats">Utilisateurs : <span id="countLv2">0</span><br>Récompenses : <span id="rewardLv2">0</span></div>
+            <div class="comm-stats">Membres : <span id="countLv2">0</span><br>Gains : <span id="rewardLv2">0 FC</span></div>
         </div>
         <div class="comm-card">
             <div class="lv-badge">Lv3</div>
             <div class="comm-rate">Commission : 1%</div>
-            <div class="comm-stats">Utilisateurs : <span id="countLv3">0</span><br>Récompenses : <span id="rewardLv3">0</span></div>
+            <div class="comm-stats">Membres : <span id="countLv3">0</span><br>Gains : <span id="rewardLv3">0 FC</span></div>
         </div>
     </div>
 
@@ -162,7 +162,7 @@
     </div>
 
     <div class="progression-banner">
-        <h2>Ma progression</h2>
+        <h2>Membres totaux de l'équipe</h2>
         <div class="progression-val" id="totalTeam">0</div>
     </div>
 
@@ -174,24 +174,25 @@
     </nav>
 
     <script>
-        // Ta vraie URL Firebase Realtime Database
+        // Ta base Firebase réelle
         const dbUrl = "https://canal-e4274-default-rtdb.firebaseio.com/users";
         const userPhone = localStorage.getItem('userPhone');
-        
-        // Base URL de déploiement GitHub Pages
         const baseUrl = "https://traders-first.github.io/traders-/";
 
         if (!userPhone) { window.location.href = 'index.html'; }
 
-        // Génération du code d'invitation (les 6 derniers chiffres du numéro de téléphone)
+        // Identifiant d'invitation unique (6 derniers chiffres du numéro)
         const myInviteCode = userPhone.slice(-6);
         document.getElementById('inviteCode').innerText = myInviteCode;
         document.getElementById('inviteLink').innerText = `${baseUrl}register.html?ref=${myInviteCode}`;
 
         function copyText(id) {
             const text = document.getElementById(id).innerText;
-            navigator.clipboard.writeText(text);
-            alert("Copié avec succès !");
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Copié avec succès !");
+            }).catch(err => {
+                console.error("Erreur de copie : ", err);
+            });
         }
 
         async function loadTeamData() {
@@ -199,50 +200,80 @@
                 const response = await fetch(`${dbUrl}.json`);
                 const users = await response.json();
                 
-                let lv1 = 0, lv2 = 0, lv3 = 0;
+                let lv1Count = 0, lv2Count = 0, lv3Count = 0;
+                let lv1Gains = 0, lv2Gains = 0, lv3Gains = 0;
+
+                // Tableaux de codes de parrainage pour isoler strictement chaque niveau
+                let lv1Codes = [];
+                let lv2Codes = [];
 
                 if (users) {
-                    // 1. Compter Niveau 1 (Directs)
-                    const directs = [];
+                    // ÉTAPE 1 : Extraire et compter uniquement le Niveau 1 Direct
                     for (let id in users) {
-                        if (users[id].referredBy === myInviteCode) {
-                            lv1++;
-                            // Extraction des 6 derniers chiffres du numéro comme identifiant d'invitation
-                            if (users[id].phone) {
-                                directs.push(users[id].phone.slice(-6));
+                        const u = users[id];
+                        if (u.phone && u.referredBy === myInviteCode) {
+                            lv1Count++;
+                            // Récupération des gains de parrainage s'ils existent dans la structure
+                            lv1Gains += parseFloat(u.commissionLv1 || u.rewardFromUser || 0);
+                            
+                            // On enregistre son code d'invitation unique (les 6 derniers chiffres de son numéro)
+                            const currentCode = u.phone.slice(-6);
+                            if (!lv1Codes.includes(currentCode)) {
+                                lv1Codes.push(currentCode);
                             }
                         }
                     }
 
-                    // 2. Compter Niveau 2
-                    const level2Users = [];
+                    // ÉTAPE 2 : Extraire et compter le Niveau 2 (Parrainé uniquement par un membre du Lv1)
                     for (let id in users) {
-                        if (directs.includes(users[id].referredBy)) {
-                            lv2++;
-                            if (users[id].phone) {
-                                level2Users.push(users[id].phone.slice(-6));
+                        const u = users[id];
+                        if (u.phone && u.referredBy && lv1Codes.includes(u.referredBy)) {
+                            // Sécurité additionnelle : éviter qu'un membre s'auto-parraine ou boucle en Lv1
+                            if (u.phone.slice(-6) !== myInviteCode) {
+                                lv2Count++;
+                                lv2Gains += parseFloat(u.commissionLv2 || 0);
+
+                                const currentCode = u.phone.slice(-6);
+                                if (!lv2Codes.includes(currentCode)) {
+                                    lv2Codes.push(currentCode);
+                                }
                             }
                         }
                     }
 
-                    // 3. Compter Niveau 3
+                    // ÉTAPE 3 : Extraire et compter le Niveau 3 (Parrainé uniquement par un membre du Lv2)
                     for (let id in users) {
-                        if (level2Users.includes(users[id].referredBy)) {
-                            lv3++;
+                        const u = users[id];
+                        if (u.referredBy && lv2Codes.includes(u.referredBy)) {
+                            // Sécurité : Ne doit appartenir ni au Lv1 ni au Lv2 ni à toi-même
+                            const currentCode = u.phone ? u.phone.slice(-6) : "";
+                            if (currentCode !== myInviteCode && !lv1Codes.includes(currentCode)) {
+                                lv3Count++;
+                                lv3Gains += parseFloat(u.commissionLv3 || 0);
+                            }
                         }
                     }
                 }
 
-                document.getElementById('countLv1').innerText = lv1;
-                document.getElementById('countLv2').innerText = lv2;
-                document.getElementById('countLv3').innerText = lv3;
-                document.getElementById('totalTeam').innerText = lv1 + lv2 + lv3;
+                // Affichage dynamique et sécurisé dans l'interface graphique
+                document.getElementById('countLv1').innerText = lv1Count;
+                document.getElementById('rewardLv1').innerText = lv1Gains.toLocaleString() + " FC";
+
+                document.getElementById('countLv2').innerText = lv2Count;
+                document.getElementById('rewardLv2').innerText = lv2Gains.toLocaleString() + " FC";
+
+                document.getElementById('countLv3').innerText = lv3Count;
+                document.getElementById('rewardLv3').innerText = lv3Gains.toLocaleString() + " FC";
+
+                // Total global des membres de l'organisation
+                document.getElementById('totalTeam').innerText = (lv1Count + lv2Count + lv3Count).toLocaleString();
 
             } catch (error) {
-                console.error("Erreur équipe:", error);
+                console.error("Erreur critique lors de la génération de l'équipe :", error);
             }
         }
 
+        // Lancement immédiat de la construction de l'arbre d'équipe
         loadTeamData();
     </script>
 </body>
