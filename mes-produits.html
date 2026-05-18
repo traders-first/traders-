@@ -48,7 +48,7 @@
         }
         .product-top { display: flex; align-items: center; gap: 15px; }
         
-        /* Conteneur Image pour une confiance totale */
+        /* Conteneur Image */
         .product-img-box {
             width: 75px; height: 75px; background: #f4f4f4; border-radius: 12px;
             overflow: hidden; display: flex; align-items: center; justify-content: center;
@@ -115,7 +115,8 @@
     </nav>
 
     <script>
-        const dbUrl = "https://first-traders-default-rtdb.firebaseio.com";
+        // URL de ta vraie base de données Firebase Realtime
+        const dbUrl = "https://canal-e4274-default-rtdb.firebaseio.com";
         const userPhone = localStorage.getItem('userPhone');
 
         if (!userPhone) { window.location.href = 'index.html'; }
@@ -126,22 +127,8 @@
             grid.innerHTML = "";
 
             try {
-                // 1. Trouver l'UID de l'utilisateur actuel
-                const usersRes = await fetch(`${dbUrl}/users.json`);
-                const users = await usersRes.json();
-                let userId = null;
-
-                for (let id in users) {
-                    if (users[id].phone === userPhone) {
-                        userId = id;
-                        break;
-                    }
-                }
-
-                if (!userId) { window.location.href = 'index.html'; return; }
-
-                // 2. Charger les achats de cet utilisateur
-                const purchasesRes = await fetch(`${dbUrl}/purchases/${userId}.json`);
+                // Lecture directe des achats de l'utilisateur connecté via sa clé numéro de téléphone
+                const purchasesRes = await fetch(`${dbUrl}/purchases/${userPhone}.json`);
                 const purchases = await purchasesRes.json();
 
                 if (!purchases || Object.keys(purchases).length === 0) {
@@ -151,13 +138,12 @@
 
                 empty.style.display = "none";
 
-                // 3. Générer les cartes pour chaque produit loué
+                // Génération des cartes pour chaque produit possédé
                 for (let pId in purchases) {
                     const item = purchases[pId];
                     
-                    // Gestion de l'image identique à la boutique (met le bon chemin de tes images ici)
-                    // Exemple : si le produit s'appelle "VIP 1", l'image sera "images/vip1.png"
-                    const imageFileName = item.name.toLowerCase().replace(/\s+/g, '') + ".png"; 
+                    // Formatage du nom pour correspondre au fichier image (ex: "VIP 1" -> "vip1.png")
+                    const imageFileName = item.name ? item.name.toLowerCase().replace(/\s+/g, '') + ".png" : "default.png"; 
 
                     const card = document.createElement('div');
                     card.className = 'product-card';
@@ -165,11 +151,11 @@
                         <div class="product-top">
                             <div class="product-img-box">
                                 <img src="images/${imageFileName}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                <i class="fas fa-chart-line" style="display:none;"></i>
+                                <i class="fas fa-chart-line" style="display:none; font-size: 30px; color: #00A651;"></i>
                             </div>
                             <div class="product-details">
                                 <h3>${item.name || "Contrat d'investissement"}</h3>
-                                <span class="badge-active"><i class="fas fa-sync spin"></i> En cours de location</span>
+                                <span class="badge-active"><i class="fas fa-sync fa-spin"></i> En cours de location</span>
                             </div>
                         </div>
                         <div class="product-stats">
@@ -205,7 +191,7 @@
             }
         }
 
-        // Lancement automatique du script au chargement
+        // Lancement au chargement de la page
         loadMyProducts();
     </script>
 </body>
