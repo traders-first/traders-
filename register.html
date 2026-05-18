@@ -87,32 +87,33 @@
                 return;
             }
 
-            const myInviteCode = Math.random().toString(36).substring(2, 8);
+            // Génération du code d'invitation (les 6 derniers chiffres du numéro)
+            const myInviteCode = phone.slice(-6);
 
-            // --- BONUS MODIFIÉ À 500 FC ---
+            // --- STRUCTURE DU COMPTE AVEC LE BONUS DE 500 FC ---
             const userData = {
                 phone: fullPhone,
                 password: password,
                 inviteCode: myInviteCode,
                 referredBy: invite,
                 balance: 500, 
+                earnings: 0,
                 date: new Date().toISOString()
             };
 
             try {
-                const checkResponse = await fetch(`${dbUrl}.json`);
-                const users = await checkResponse.json();
-                if (users) {
-                    for (let id in users) {
-                        if (users[id].phone === fullPhone) {
-                            alert("Ce numéro est déjà utilisé.");
-                            return;
-                        }
-                    }
+                // Vérification directe si le numéro existe déjà en tant que clé Firebase
+                const checkResponse = await fetch(`${dbUrl}/${fullPhone}.json`);
+                const existingUser = await checkResponse.json();
+                
+                if (existingUser !== null) {
+                    alert("Ce numéro est déjà utilisé.");
+                    return;
                 }
 
-                await fetch(`${dbUrl}.json`, {
-                    method: 'POST',
+                // Utilisation de la méthode PUT pour enregistrer sous la clé du numéro de téléphone
+                await fetch(`${dbUrl}/${fullPhone}.json`, {
+                    method: 'PUT',
                     body: JSON.stringify(userData)
                 });
 
@@ -120,6 +121,7 @@
                 alert("Compte créé avec succès ! Bonus de 500 FC offert.");
                 window.location.href = 'dashboard.html';
             } catch (error) {
+                console.error(error);
                 alert("Erreur lors de l'inscription.");
             }
         });
