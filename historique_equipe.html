@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Traders - Historique d'Équipe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; font-family: 'Helvetica Neue', Arial, sans-serif; }
+        body { margin: 0; background-color: #f8f8f8; color: #000; padding-bottom: 30px; }
+
+        .header { background: #00A651; color: #fff; padding: 20px; display: flex; align-items: center; gap: 15px; }
+        .header a { color: #fff; text-decoration: none; }
+        
+        .container { padding: 20px; }
+
+        /* Carte d'investissement total de l'équipe */
+        .team-investment-box {
+            background: linear-gradient(135deg, #00A651, #005c2c);
+            color: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 166, 81, 0.2);
+        }
+        .team-investment-box span { font-size: 13px; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px; }
+        .team-investment-box h2 { margin: 10px 0 0; font-size: 28px; font-weight: bold; }
+
+        /* Onglets pour basculer entre les niveaux */
+        .tabs { display: flex; background: #fff; border-radius: 10px; padding: 5px; margin-bottom: 20px; border: 1px solid #eee; }
+        .tab-btn { flex: 1; padding: 12px; border: none; background: transparent; font-weight: bold; font-size: 13px; color: #666; cursor: pointer; border-radius: 8px; text-align: center; }
+        .tab-btn.active { background: #00A651; color: #fff; }
+
+        /* Liste des membres */
+        .member-list { display: none; flex-direction: column; gap: 12px; }
+        .member-list.active { display: flex; }
+
+        .member-card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .member-info { display: flex; align-items: center; gap: 12px; }
+        .member-avatar { background: #e8f5e9; color: #00A651; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+        .member-details h4 { margin: 0 0 4px; font-size: 14px; color: #111; }
+        .member-details p { margin: 0; font-size: 11px; color: #888; }
+        
+        .member-status { font-size: 11px; font-weight: bold; padding: 4px 10px; border-radius: 20px; }
+        .status-active { background: #e8f5e9; color: #27ae60; }
+        .status-inactive { background: #ffebee; color: #c0392b; }
+
+        .loading-msg, .empty-msg { text-align: center; padding: 40px; color: #999; font-size: 14px; background: #fff; border-radius: 12px; border: 1px dashed #ccc; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="equipe.html"><i class="fas fa-arrow-left"></i></a>
+        <h1 style="font-size: 18px; margin:0;">Historique de l'Équipe</h1>
+    </div>
+
+    <div class="container">
+        
+        <div class="team-investment-box">
+            <span>Investissement Total de l'Équipe</span>
+            <h2 id="totalTeamInvestment">0 FC</h2>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab(event, 'lv1')">Niveau 1</button>
+            <button class="tab-btn" onclick="switchTab(event, 'lv2')">Niveau 2</button>
+            <button class="tab-btn" onclick="switchTab(event, 'lv3')">Niveau 3</button>
+        </div>
+
+        <div id="loadingMessage" class="loading-msg">
+            <i class="fas fa-spinner fa-spin" style="color: #00A651; margin-right: 8px;"></i> Analyse des réseaux de l'équipe...
+        </div>
+
+        <div id="lv1" class="member-list active"></div>
+        <div id="lv2" class="member-list"></div>
+        <div id="lv3" class="member-list"></div>
+
+    </div>
+
+    <script>
+        const dbUrl = "https://canal-e4274-default-rtdb.firebaseio.com";
+        const userPhone = localStorage.getItem('userPhone');
+        const myInviteCode = userPhone ? userPhone.slice(-6) : "";
+
+        if (!userPhone) { window.location.href = 'index.html'; }
+
+        // Basculer entre les onglets Lv1, Lv2 et Lv3
+        function switchTab(event, levelId) {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const lists = document.querySelectorAll('.member-list');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            lists.forEach(list => list.classList.remove('active'));
+
+            event.currentTarget.classList.add('active');
+            document.getElementById(levelId).classList.add('active');
+        }
+
+        // Formater les numéros pour préserver l'anonymat (Ex: 089xxx345)
+        function formatPhone(phone) {
+            if (!phone || phone.length < 7) return phone;
+            return phone.substring(0, 3) + "xxx" + phone.substring(phone.length - 3);
+        }
+
+        async function loadTeamHistory() {
+            try {
+                // 1. Récupérer tous les utilisateurs
+                const usersRes = await fetch(`${dbUrl}/users.json`);
+                const users = await usersRes.json();
+
+                // 2. Récupérer tous les investissements effectués sur l'application
+                const purchasesRes = await fetch(`${dbUrl}/purchases.json`);
+                const purchases = await purchasesRes.json();
+
+                let totalInvestment = 0;
+                
+                let lv1Codes = [];
+                let lv2Codes = [];
+
+                const lv1Container = document.getElementById('lv1');
+                const lv2Container = document.getElementById('lv2');
+                const lv3Container = document.getElementById('lv3');
+
+                lv1Container.innerHTML = "";
+                lv2Container.innerHTML = "";
+                lv3Container.innerHTML = "";
+
+                if (users) {
+                    // ÉTAPE 1 : Traitement complet du Niveau 1 Direct
+                    for (let id in users) {
+                        const u = users[id];
+                        if (u.phone && u.referredBy === myInviteCode) {
+                            const userCode = u.phone.slice(-6);
+                            if (!lv1Codes.includes(userCode)) lv1Codes.push(userCode);
+
+                            // Calculer l'investissement de cet utilisateur
+                            let userInvest = 0;
+                            if (purchases && purchases[u.phone]) {
+                                for (let pId in purchases[u.phone]) {
+                                    userInvest += parseFloat(purchases[u.phone][pId].price || 0);
+                                }
+                            }
+                            totalInvestment += userInvest;
+
+                            // Ajouter au design HTML du niveau 1
+                            lv1Container.appendChild(createMemberCard(u, userInvest));
+                        }
+                    }
+
+                    // ÉTAPE 2 : Traitement complet du Niveau 2
+                    for (let id in users) {
+                        const u = users[id];
+                        if (u.phone && u.referredBy && lv1Codes.includes(u.referredBy)) {
+                            if (u.phone.slice(-6) !== myInviteCode) {
+                                const userCode = u.phone.slice(-6);
+                                if (!lv2Codes.includes(userCode)) lv2Codes.push(userCode);
+
+                                let userInvest = 0;
+                                if (purchases && purchases[u.phone]) {
+                                    for (let pId in purchases[u.phone]) {
+                                        userInvest += parseFloat(purchases[u.phone][pId].price || 0);
+                                    }
+                                }
+                                totalInvestment += userInvest;
+
+                                lv2Container.appendChild(createMemberCard(u, userInvest));
+                            }
+                        }
+                    }
+
+                    // ÉTAPE 3 : Traitement complet du Niveau 3
+                    for (let id in users) {
+                        const u = users[id];
+                        if (u.phone && u.referredBy && lv2Codes.includes(u.referredBy)) {
+                            const userCode = u.phone.slice(-6);
+                            if (userCode !== myInviteCode && !lv1Codes.includes(userCode)) {
+                                
+                                let userInvest = 0;
+                                if (purchases && purchases[u.phone]) {
+                                    for (let pId in purchases[u.phone]) {
+                                        userInvest += parseFloat(purchases[u.phone][pId].price || 0);
+                                    }
+                                }
+                                totalInvestment += userInvest;
+
+                                lv3Container.appendChild(createMemberCard(u, userInvest));
+                            }
+                        }
+                    }
+                }
+
+                // Afficher le montant total global accumulé
+                document.getElementById('totalTeamInvestment').innerText = totalInvestment.toLocaleString() + " FC";
+
+                // Gérer l'affichage si un des niveaux ne possède aucun membre inscrit
+                checkIfEmpty(lv1Container);
+                checkIfEmpty(lv2Container);
+                checkIfEmpty(lv3Container);
+
+                // Masquer le loader global de chargement
+                document.getElementById('loadingMessage').style.display = 'none';
+
+            } catch (error) {
+                console.error("Erreur de l'historique d'équipe :", error);
+                document.getElementById('loadingMessage').innerHTML = "<i class='fas fa-exclamation-triangle' style='color:#e74c3c;'></i> Erreur lors de la récupération des données d'équipe.";
+            }
+        }
+
+        // Fonction d'aide pour générer la structure graphique d'une carte membre
+        function createMemberCard(user, investmentAmount) {
+            const card = document.createElement('div');
+            card.className = 'member-card';
+            
+            const isVIP = investmentAmount > 0;
+            const statusClass = isVIP ? 'status-active' : 'status-inactive';
+            const statusText = isVIP ? 'Investisseur VIP' : 'Inactif';
+
+            card.innerHTML = `
+                <div class="member-info">
+                    <div class="member-avatar"><i class="fas fa-user"></i></div>
+                    <div class="member-details">
+                        <h4>${formatPhone(user.phone)}</h4>
+                        <p>Inscrit le : ${user.dateInscription || "Non spécifiée"}</p>
+                        <p style="color:#00A651; font-weight:bold; margin-top:2px;">Investi : ${investmentAmount.toLocaleString()} FC</p>
+                    </div>
+                </div>
+                <div class="member-status ${statusClass}">${statusText}</div>
+            `;
+            return card;
+        }
+
+        // Fonction d'aide pour insérer un message explicite si un sous-réseau est vide
+        function checkIfEmpty(container) {
+            if (container.innerHTML === "") {
+                container.innerHTML = `<div class="empty-msg">Aucun utilisateur enregistré dans ce niveau d'équipe.</div>`;
+            }
+        }
+
+        // Lancement direct de l'extraction des structures à l'ouverture de la page
+        loadTeamHistory();
+    </script>
+</body>
+</html>
